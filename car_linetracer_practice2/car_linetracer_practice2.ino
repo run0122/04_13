@@ -1,7 +1,7 @@
 const int motor_A1 = 5;
 const int motor_A2 = 6;
-const int motor_B1 = 10;
-const int motor_B2 = 11;
+const int motor_B1 = 9;
+const int motor_B2 = 10;
 const int IR_R = A1;
 const int IR_M = A3;
 const int IR_L = A5;
@@ -55,39 +55,40 @@ void loop() {
 
 void right () {
   //우
-  analogWrite(motor_A1, 180);
-  analogWrite(motor_A2, 0);
-  analogWrite(motor_B1, 0);
-  analogWrite(motor_B2, 0);}
+  digitalWrite(motor_A1, HIGH);
+  digitalWrite(motor_A2, LOW);
+  digitalWrite(motor_B1, LOW);
+  digitalWrite(motor_B2, LOW);
+}
 
 void left() {
   //좌
-  analogWrite(motor_A1, 0);
-  analogWrite(motor_A2, 0);
-  analogWrite(motor_B1, 180);
-  analogWrite(motor_B2, 0);
+  digitalWrite(motor_A1, LOW);
+  digitalWrite(motor_A2, LOW);
+  digitalWrite(motor_B1, HIGH);
+  digitalWrite(motor_B2, LOW);
 }
 
 void forward() {
   //전진
-  analogWrite(motor_A1, 180);
-  analogWrite(motor_A2, 0);
-  analogWrite(motor_B1, 180);
-  analogWrite(motor_B2, 0);
+  digitalWrite(motor_A1, HIGH);
+  digitalWrite(motor_A2, LOW);
+  digitalWrite(motor_B1, HIGH);
+  digitalWrite(motor_B2, LOW);
 }
 
 void backward() {
   //후진
-  analogWrite(motor_A1, 0);
-  analogWrite(motor_A2, 180);
-  analogWrite(motor_B1, 0);
-  analogWrite(motor_B2, 180);
+  digitalWrite(motor_A1, LOW);
+  digitalWrite(motor_A2, HIGH);
+  digitalWrite(motor_B1, LOW);
+  digitalWrite(motor_B2, HIGH);
 }
 
 void stop() {
   //정지
-  analogWrite(motor_A1, 0);
-  analogWrite(motor_A2, 0);
-  analogWrite(motor_B1, 0);
-  analogWrite(motor_B2, 0);
+  digitalWrite(motor_A1, LOW);
+  digitalWrite(motor_A2, LOW);
+  digitalWrite(motor_B1, LOW);
+  digitalWrite(motor_B2, LOW);
 }
