@@ -9,11 +9,6 @@ int IR_L_data;
 int IR_M_data;
 int IR_R_data;
 
-bool startCheck = false;
-bool finishCheck = true;
-
-unsigned long startTime = 0;
-unsigned long finishTime = 0;
 
 void setup() {
   pinMode(motor_A1, OUTPUT);
@@ -40,13 +35,6 @@ void loop() {
   Serial.println(IR_R_data);
   
   if (IR_L_data == 0 and IR_M_data == 1 and IR_R_data == 0) {
-    if(startCheck==false){
-      startCheck = true;
-      if(finishCheck==true){
-        finishCheck = false;
-      }
-      startTime = millis();
-    }
     Serial.println("직진");
     forward();
   }
@@ -60,19 +48,6 @@ void loop() {
   }
   else if (IR_L_data == 1  and IR_R_data == 1) {
     Serial.println("정지");
-    stop();
-  }
-  else if (IR_L_data == 0 and IR_M_data == 0 and IR_R_data == 0) {
-    if(startCheck==true){
-      startCheck = false;
-      if(finishCheck==false){
-        finishCheck = true;
-      }
-      finishTime = millis();
-      Serial.println((String)(finishTime - startTime) +" 동안 주행 하였음.");
-      delay(20000);
-    }
-    Serial.println("No 라이딩");
     stop();
   }
 }
