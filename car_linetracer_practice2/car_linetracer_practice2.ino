@@ -35,7 +35,7 @@ void loop() {
   unsigned long currentMillis = millis();
 
   if ((currentMillis - previousMillis) >= interval) {
-    
+
     previousMillis = currentMillis;
 
     IR_L_data = digitalRead(IR_L);
@@ -75,6 +75,7 @@ void loop() {
         finishCheck = true;
       }
       finishTime = millis();
+      Serial.println("주행 종료");
       log();
     }
   } else if (IR_L_data == 0 and IR_M_data == 0 and IR_R_data == 0) {
