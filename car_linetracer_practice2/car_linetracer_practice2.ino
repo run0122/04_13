@@ -15,6 +15,9 @@ bool finishCheck = true;
 unsigned long startTime = 0;
 unsigned long finishTime = 0;
 
+unsigned long previousMillis = 0;
+const long interval = 100;
+
 void setup() {
   pinMode(motor_A1, OUTPUT);
   pinMode(motor_A2, OUTPUT);
@@ -24,14 +27,21 @@ void setup() {
   pinMode(IR_M, INPUT);
   pinMode(IR_R, INPUT);
   Serial.begin(9600);
-  Serial.print("Start");
+  Serial.println("Start");
 }
 
 void loop() {
-  //IR 센서 값을 읽어 출력해주는 코드
-  IR_L_data = digitalRead(IR_L);
-  IR_M_data = digitalRead(IR_M);
-  IR_R_data = digitalRead(IR_R);
+
+  unsigned long currentMillis = millis();
+
+  if ((currentMillis - previousMillis) >= interval) {
+    
+    previousMillis = currentMillis;
+
+    IR_L_data = digitalRead(IR_L);
+    IR_M_data = digitalRead(IR_M);
+    IR_R_data = digitalRead(IR_R);
+  }
 
   if (IR_L_data == 0 and IR_M_data == 1 and IR_R_data == 0) {
     // 직진
@@ -41,12 +51,19 @@ void loop() {
         finishCheck = false;
       }
       startTime = millis();
+      Serial.println("주행 시작");
     }
     forward();
   } else if (IR_L_data == 1 and IR_M_data == 0 and IR_R_data == 0) {
     // 좌회전
     left();
+  } else if (IR_L_data == 1 and IR_M_data == 1 and IR_R_data == 0) {
+    // 좌회전
+    left();
   } else if (IR_L_data == 0 and IR_M_data == 0 and IR_R_data == 1) {
+    // 우회전
+    right();
+  } else if (IR_L_data == 0 and IR_M_data == 1 and IR_R_data == 1) {
     // 우회전
     right();
   } else if (IR_L_data == 1 and IR_M_data == 1 and IR_R_data == 1) {
@@ -69,6 +86,7 @@ void loop() {
         finishCheck = true;
       }
       finishTime = millis();
+      Serial.println("주행 종료");
       log();
     }
   }
@@ -115,5 +133,7 @@ void stop() {
 }
 
 void log() {
-  Serial.println((String)(finishTime - startTime) + " 동안 주행 하였음.");
+  if ((finishTime - startTime) > 100) {
+    Serial.println((String)(finishTime - startTime) + " 동안 주행 하였음.");
+  }
 }
