@@ -16,7 +16,7 @@ unsigned long startTime = 0;
 unsigned long finishTime = 0;
 
 unsigned long previousMillis = 0;
-const long interval = 100;
+const long interval = 30;
 
 void setup() {
   pinMode(motor_A1, OUTPUT);
@@ -34,13 +34,19 @@ void loop() {
 
   unsigned long currentMillis = millis();
 
+  IR_L_data = digitalRead(IR_L);
+  IR_M_data = digitalRead(IR_M);
+  IR_R_data = digitalRead(IR_R);
+
   if ((currentMillis - previousMillis) >= interval) {
 
     previousMillis = currentMillis;
 
-    IR_L_data = digitalRead(IR_L);
-    IR_M_data = digitalRead(IR_M);
-    IR_R_data = digitalRead(IR_R);
+    Serial.print(IR_L_data);
+    Serial.print("-");
+    Serial.print(IR_M_data);
+    Serial.print("-");
+    Serial.println(IR_R_data);
   }
 
   if (IR_L_data == 0 and IR_M_data == 1 and IR_R_data == 0) {
@@ -78,19 +84,7 @@ void loop() {
       Serial.println("주행 종료");
       log();
     }
-  } else if (IR_L_data == 0 and IR_M_data == 0 and IR_R_data == 0) {
-    // 정지
-    stop();
-    if (startCheck == true) {
-      startCheck = false;
-      if (finishCheck == false) {
-        finishCheck = true;
-      }
-      finishTime = millis();
-      Serial.println("주행 종료");
-      log();
-    }
-  }
+  } 
 }
 
 void right() {
