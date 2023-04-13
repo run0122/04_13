@@ -27,57 +27,54 @@ void setup() {
   Serial.print("Start");
 }
 
-
 void loop() {
   //IR 센서 값을 읽어 출력해주는 코드
   IR_L_data = digitalRead(IR_L);
   IR_M_data = digitalRead(IR_M);
   IR_R_data = digitalRead(IR_R);
-  Serial.print(IR_L_data);
-  Serial.print("-");
-  Serial.print(IR_M_data);
-  Serial.print("-");
-  Serial.println(IR_R_data);
-  
+
   if (IR_L_data == 0 and IR_M_data == 1 and IR_R_data == 0) {
-    if(startCheck==false){
+    // 직진
+    if (startCheck == false) {
       startCheck = true;
-      if(finishCheck==true){
+      if (finishCheck == true) {
         finishCheck = false;
       }
       startTime = millis();
     }
-    Serial.println("직진");
     forward();
-  }
-  else if (IR_L_data == 1 and IR_M_data == 0 and IR_R_data == 0) {
-    Serial.println("좌회전");
+  } else if (IR_L_data == 1 and IR_M_data == 0 and IR_R_data == 0) {
+    // 좌회전
     left();
-  }
-  else if (IR_L_data == 0 and IR_M_data == 0 and IR_R_data == 1) {
-    Serial.println("우회전");
+  } else if (IR_L_data == 0 and IR_M_data == 0 and IR_R_data == 1) {
+    // 우회전
     right();
-  }
-  else if (IR_L_data == 1  and IR_R_data == 1) {
-    Serial.println("정지");
+  } else if (IR_L_data == 1 and IR_M_data == 1 and IR_R_data == 1) {
+    // 정지
     stop();
-  }
-  else if (IR_L_data == 0 and IR_M_data == 0 and IR_R_data == 0) {
-    if(startCheck==true){
+    if (startCheck == true) {
       startCheck = false;
-      if(finishCheck==false){
+      if (finishCheck == false) {
         finishCheck = true;
       }
       finishTime = millis();
-      Serial.println((String)(finishTime - startTime) +" 동안 주행 하였음.");
-      delay(20000);
+      log();
     }
-    Serial.println("No 라이딩");
+  } else if (IR_L_data == 0 and IR_M_data == 0 and IR_R_data == 0) {
+    // 정지
     stop();
+    if (startCheck == true) {
+      startCheck = false;
+      if (finishCheck == false) {
+        finishCheck = true;
+      }
+      finishTime = millis();
+      log();
+    }
   }
 }
 
-void right () {
+void right() {
   //우
   digitalWrite(motor_A1, HIGH);
   digitalWrite(motor_A2, LOW);
@@ -115,4 +112,8 @@ void stop() {
   digitalWrite(motor_A2, LOW);
   digitalWrite(motor_B1, LOW);
   digitalWrite(motor_B2, LOW);
+}
+
+void log() {
+  Serial.println((String)(finishTime - startTime) + " 동안 주행 하였음.");
 }
